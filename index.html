@@ -1,0 +1,310 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"> 
+  <meta name="theme-color" content="#171812"> 
+  <meta name="description" content="One man. One bag. Five minutes. Play Sir on a Mission, a cinematic five-level arcade adventure."> 
+  <title>Sir on a Mission — One man. One bag. Five minutes.</title> 
+
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml"> 
+  <link rel="stylesheet" href="./src/ui/style.css"> 
+</head> 
+
+<body> 
+<main id="app"> 
+
+  <section id="menu" class="screen menu"> 
+    <div class="menu-art" role="img" aria-label="Sir sits calmly in his room with a phone and his blue-black bag."></div> 
+    <div class="menu-shade"></div>
+    <div class="grain"></div> 
+
+    <header class="masthead">
+      <a class="wordmark" href="./" aria-label="Sir on a Mission home">
+        <span class="mark">S</span> A VERY SERIOUS GAME
+      </a>
+
+      <div class="top-actions">
+        <button class="icon-button sound-button" aria-label="Turn sound on" title="Sound">
+          ♫<span>SOUND OFF</span>
+        </button>
+
+        <button class="icon-button fullscreen-button" aria-label="Enter fullscreen" title="Fullscreen">
+          ⛶
+        </button>
+      </div>
+    </header> 
+
+    <div class="menu-copy">
+      <div class="eyebrow">
+        <span></span> FIVE MINUTES. ZERO EXCUSES.
+      </div>
+
+      <h1>
+        <span>SIR</span>
+        <span class="title-small">ON A</span>
+        <span class="title-gold">
+          MISSION<span class="period">.</span>
+        </span>
+      </h1>
+
+      <p class="tagline">One man. One bag. Five minutes.</p> 
+
+      <div class="menu-options">
+        <button id="play" class="play-button">
+          <span class="play-triangle">▶</span>
+          <strong>LET’S GO, SIR.</strong>
+          <span class="button-shortcut">ENTER ↵</span>
+        </button>
+
+        <div class="menu-links">
+          <button data-panel="levels"><span>01</span> Level select <b>↗</b></button>
+          <button data-panel="score"><span>02</span> High score <b>↗</b></button>
+          <button data-panel="controls"><span>03</span> Controls <b>↗</b></button>
+          <button data-panel="settings"><span>04</span> Settings <b>↗</b></button>
+        </div>
+      </div> 
+    </div> 
+
+    <div class="mission-note">
+      <span class="note-icon">!</span>
+
+      <div>
+        <small>CALENDAR REMINDER</small>
+        <p>Meeting starts in <b>05:00</b></p>
+        <span>Attendance is, apparently, mandatory.</span>
+      </div>
+    </div> 
+
+    <div class="scene-caption">
+      <span class="caption-line"></span>
+
+      <div>
+        <small>09:55 AM · SOMEWHERE ON CAMPUS</small>
+        <p>A perfectly normal morning.</p>
+      </div>
+    </div> 
+
+    <footer class="menu-footer">
+      <div>
+        <span class="footer-dot"></span> READY WHEN YOU ARE
+      </div>
+
+      <span>FIVE CHAPTERS. ONE QUESTIONABLE COMMUTE.</span>
+      <span class="version">V 1.0</span>
+    </footer> 
+  </section> 
+
+
+  <section id="game-screen" class="screen game-screen hidden" aria-label="Game"> 
+
+    <canvas
+      id="game"
+      width="1280"
+      height="720"
+      tabindex="0"
+      aria-label="Sir on a Mission game. Arrow keys move, Space jumps, E attacks. Press Escape to pause."
+    ></canvas> 
+
+    <div class="game-vignette"></div> 
+
+    <header id="hud" class="hud"> 
+
+      <div class="hud-brand">
+        <span class="mark">S</span>
+
+        <div>
+          <b>SIR ON A MISSION</b>
+          <small id="level-name">01 / THE ROOM</small>
+        </div>
+      </div> 
+
+      <div class="energy-stat">
+        <small>ENERGY <b id="energy-value">100</b></small>
+
+        <div class="energy-track">
+          <span id="energy-fill"></span>
+        </div>
+      </div> 
+
+      <div class="timer-stat">
+        <small>MEETING IN</small>
+        <b id="timer">05:00</b>
+      </div> 
+
+      <div class="small-stat">
+        <small>DOCUMENTS</small>
+        <b id="documents">00</b>
+      </div> 
+
+      <div class="small-stat score-stat">
+        <small>SCORE</small>
+        <b id="score">000000</b>
+      </div> 
+
+      <button class="icon-button sound-button game-sound-button" aria-label="Turn sound on">
+        ♫
+      </button> 
+
+      <button id="pause" class="icon-button" aria-label="Pause game">
+        Ⅱ
+      </button> 
+
+    </header> 
+
+    <div id="objective" class="objective">
+      <span>OBJECTIVE</span>
+      <p>Get out of the room. Keep your dignity.</p>
+    </div> 
+
+    <div id="boss-ui" class="boss-ui hidden">
+
+      <div>
+        <b id="boss-name">THE DEADLINE</b>
+        <span id="boss-phase">PHASE 1 / 3</span>
+      </div>
+
+      <div class="boss-track">
+        <span id="boss-fill"></span>
+      </div>
+
+      <small id="boss-warning">
+        Get close. Swing the bag.
+      </small>
+
+    </div> 
+
+    <div id="toast" class="game-toast" aria-live="polite"></div> 
+
+    <div id="trap-ui" class="trap-ui hidden">
+      <small>JUST ONE QUICK MEETING</small>
+      <b>RAPIDLY PRESS SPACE</b>
+
+      <div>
+        <span id="trap-fill"></span>
+      </div>
+    </div> 
+
+    <div class="game-bottom">
+
+      <div class="ability-meter">
+        <span class="keycap">F</span>
+
+        <div>
+          <small id="phone-label">DO NOT DISTURB</small>
+
+          <div class="meter-track">
+            <span id="phone-fill"></span>
+          </div>
+        </div>
+
+        <b id="phone-value">100%</b>
+      </div>
+
+      <div class="buffs">
+        <span id="wifi">◉ WI-FI <b>OFFLINE</b></span>
+        <span id="chai">☕ CHAI <b>0</b></span>
+      </div>
+
+      <div id="level-progress" class="level-progress"></div>
+
+    </div> 
+
+    <div class="keyboard-strip">
+      <span><kbd>A</kbd><kbd>D</kbd> MOVE</span>
+      <span><kbd>SPACE</kbd> JUMP</span>
+      <span><kbd>S</kbd> DUCK</span>
+      <span><kbd>SHIFT</kbd> DASH</span>
+      <span><kbd>E</kbd> BAG ATTACK</span>
+      <span><kbd>F</kbd> PHONE</span>
+    </div> 
+
+    <div id="touch-controls" class="touch-controls">
+
+      <div class="touch-move">
+        <button data-key="ArrowLeft" aria-label="Move left">◀</button>
+        <button data-key="ArrowRight" aria-label="Move right">▶</button>
+        <button data-key="ArrowDown" aria-label="Duck">↓</button>
+      </div>
+
+      <div class="touch-action">
+        <button data-key="KeyF" aria-label="Phone special">F</button>
+        <button data-key="ShiftLeft" aria-label="Dash">⇥</button>
+        <button data-key="KeyE" aria-label="Bag attack">BAG</button>
+        <button data-key="Space" aria-label="Jump">↑</button>
+      </div>
+
+    </div> 
+
+    <div id="chapter-card" class="chapter-card hidden">
+      <small id="chapter-number">CHAPTER 01</small>
+      <h2 id="chapter-title">THE ROOM</h2>
+      <p id="chapter-subtitle">THE JOURNEY BEGINS</p>
+    </div> 
+
+  </section> 
+
+
+  <section id="cinematic" class="screen cinematic hidden">
+
+    <div class="cinematic-art"></div>
+
+    <canvas
+      id="cinema-stage"
+      width="1280"
+      height="720"
+      class="hidden"
+    ></canvas>
+
+    <div class="cinema-bars"></div>
+
+    <div class="cinema-copy">
+      <small id="cinema-kicker">09:55 AM</small>
+
+      <h2 id="cinema-title">
+        MEETING STARTS IN<br>
+        <em>5 MINUTES.</em>
+      </h2>
+
+      <p id="cinema-line">
+        He had other plans. They involved sitting.
+      </p>
+    </div>
+
+    <button id="skip" class="skip-button">
+      SKIP <kbd>SPACE</kbd>
+    </button>
+
+  </section> 
+
+
+  <dialog id="panel">
+
+    <div class="panel-heading">
+      <span class="eyebrow">SIR ON A MISSION</span>
+
+      <button
+        id="close-panel"
+        class="close-button"
+        aria-label="Close dialog"
+      >
+        ✕
+      </button>
+    </div>
+
+    <div id="panel-content"></div>
+
+  </dialog> 
+
+
+  <div id="loading" class="loading hidden">
+    <span class="mark">S</span>
+    <p>Getting the bag ready…</p>
+  </div> 
+
+</main> 
+
+<script type="module" src="./src/main.js"></script> 
+
+</body> 
+</html>
